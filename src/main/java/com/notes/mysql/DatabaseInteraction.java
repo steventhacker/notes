@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -23,6 +25,10 @@ public class DatabaseInteraction {
 	private static Connection connection = null;
 	private static Statement statement = null;
 	private static ResultSet resultSet = null;
+	
+	private DatabaseInteraction() {
+		// Private constructor
+	}
 	
 	public static void connectToDatabase() {
 		
@@ -147,9 +153,9 @@ public class DatabaseInteraction {
 	 * @param sessionId  specific session
 	 * @return  all questions and answers for a session
 	 */
-	public static HashMap<String, String> getFlashcards(String sessionId) {
+	public static Map<String, String> getFlashcards(String sessionId) {
 		
-		HashMap<String, String> flashcards = new HashMap<String, String>();
+		Map<String, String> flashcards = new HashMap<String, String>();
 		
 		// Connect to database
 		connectToDatabase();
@@ -173,16 +179,16 @@ public class DatabaseInteraction {
 	 * @param sessionId  specific session
 	 * @return  one random question & answer 
 	 */
-	public static HashMap<String, String> getRandomFlashcard(String sessionId) {
+	public static Map<String, String> getRandomFlashcard(String sessionId) {
 		
-		HashMap<String, String> flashcard = new HashMap<String, String>();
+		Map<String, String> flashcard = new HashMap<String, String>();
 		
 		// Connect to database
-		HashMap<String, String> fullCards = getFlashcards(sessionId);
+		Map<String, String> fullCards = getFlashcards(sessionId);
 		Random rand = new Random();
 		
 		// Keys from the full set of questions & answers
-		ArrayList<String> keys = new ArrayList<String>(fullCards.keySet());
+		List<String> keys = new ArrayList<String>(fullCards.keySet());
 		
 		// Get question & answer based on random key
 		String randomQuestion = keys.get(rand.nextInt(keys.size()));
@@ -197,9 +203,9 @@ public class DatabaseInteraction {
 	 * 
 	 * @return session IDs and names
 	 */
-	public static HashMap<String, String> getTables() {
+	public static Map<String, String> getTables() {
 		
-		HashMap<String, String> tables = new HashMap<String, String>();
+		Map<String, String> tables = new HashMap<String, String>();
 		
 		try {
 			// Connect to database
@@ -214,7 +220,7 @@ public class DatabaseInteraction {
 			LOGGER.warn("Could not get table list", e);
 		}
 		// This shouldn't ever happen
-		if (tables.size() < 1) {
+		if (tables.isEmpty()) {
 			tables.put("No data could be retrieved", "No data");
 		}
 		

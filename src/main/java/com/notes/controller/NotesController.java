@@ -3,7 +3,8 @@ package com.notes.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,14 @@ import com.notes.mysql.DatabaseInteraction;
 @RequestMapping(method = RequestMethod.POST)
 public class NotesController {
 	
-	private final Logger LOGGER = LoggerFactory.getLogger(NotesController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NotesController.class);
 
 	/**
 	 * Creates initial text file and DB table for each note taking session.  
 	 * 
 	 * @param sessionId session that is initially named
 	 * @param sessionName name that will be used for reference
+	 * @throws IOException 
 	 * 
 	 * @throws Exception
 	 */
@@ -33,8 +35,7 @@ public class NotesController {
 	public String setUpSession(
 			Model model, 
 			@RequestParam(value="sessionId") String sessionId,
-			@RequestParam(value="sessionName") String sessionName) 
-					throws Exception {
+			@RequestParam(value="sessionName") String sessionName) throws IOException  {
 		
 		// Create text file to store questions & answers temporarily. Used to populate DB table when session is finalized.
 		File file = new File(sessionId+".txt");
@@ -66,8 +67,7 @@ public class NotesController {
 			@RequestParam(value = "flashcardSession") String sessionId) {
 		
 		// Get flashcards from database
-		HashMap<String, String> flashcards = DatabaseInteraction.getRandomFlashcard(sessionId);
-		//HashMap<String, String> flashcards = DatabaseInteraction.getFlashcards(sessionId);
+		Map<String, String> flashcards = DatabaseInteraction.getRandomFlashcard(sessionId);
 		String sessionName = DatabaseInteraction.getSessionName(sessionId);
 		
 		model.addAttribute("sessionId", sessionId);
@@ -111,11 +111,10 @@ public class NotesController {
 			model.addAttribute("sessionId", sessionId);
 			model.addAttribute("question", question);
 			model.addAttribute("answer", answer);
-			}
-		catch (Exception e) {
-			LOGGER.warn("Eception when writing file for question/answer input", e);
-			model.addAttribute("error", "Could not write to file");
-		}		
+			} catch (IOException e) {
+				LOGGER.warn("Eception when writing file for question/answer input", e);
+				model.addAttribute("error", "Could not write to file");
+				}		
 		
 		model.addAttribute("sessionId", sessionId);
 		
@@ -137,7 +136,7 @@ public class NotesController {
 		DatabaseInteraction.insertQuestion(sessionId);
 		
 		// Retrieve all tables for results page
-		HashMap<String, String> tables = DatabaseInteraction.getTables();
+		Map<String, String> tables = DatabaseInteraction.getTables();
 		model.addAttribute("tables", tables);
 		
 		return "results";
@@ -152,7 +151,7 @@ public class NotesController {
 			@RequestParam(value = "sessionId") String sessionId) {
 		
 		// Retrieve all tables for results page
-		HashMap<String, String> tables = DatabaseInteraction.getTables();
+		Map<String, String> tables = DatabaseInteraction.getTables();
 		
 		model.addAttribute("tables", tables);				
 		model.addAttribute(sessionId);
