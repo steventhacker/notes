@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -111,7 +112,12 @@ public class DatabaseInteraction {
 					question = bufferedReader.readLine();
 				}
 				answer = bufferedReader.readLine();
-				statement.executeUpdate("INSERT INTO "+sessionId+" (question, answer) VALUES ('"+question+"', '"+answer+"')");
+				PreparedStatement preparedStatement = 
+						connection.prepareStatement("INSERT INTO "+sessionId+" (question, answer) VALUES (?, ?)");
+				preparedStatement.setString(1, question);
+				preparedStatement.setString(2, answer);
+				preparedStatement.executeUpdate();
+				preparedStatement.close();				
 			}
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Could not find file for database write", e);
