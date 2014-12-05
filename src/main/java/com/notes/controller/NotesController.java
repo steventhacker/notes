@@ -31,6 +31,7 @@ public class NotesController {
 	 * 
 	 * @throws Exception
 	 */
+	
 	@RequestMapping("/createSession")
 	public String setUpSession(
 			Model model, 

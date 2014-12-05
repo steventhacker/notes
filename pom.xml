@@ -100,14 +100,34 @@
       <version>v2-rev121-1.18.0-rc</version>
     </dependency>
     <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-servlet</artifactId>
+      <version>1.18.0-rc</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client-appengine</artifactId>
+      <version>1.18.0-rc</version>
+    </dependency>
+    <dependency>
+	  <groupId>com.google.apis</groupId>
+	  <artifactId>google-api-services-oauth2</artifactId>
+	  <version>v2-rev68-1.18.0-rc</version>
+	</dependency>
+    <dependency>
 		<groupId>javax.servlet</groupId>
 		<artifactId>servlet-api</artifactId>
 		<version>2.5</version>
 		<scope>provided</scope>
-  </dependency>
+    </dependency>
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.9</version>
+	</dependency>
   </dependencies>
   <build>
-    <finalName>GoogleDrive</finalName>
+    <finalName>Note Flashcards</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
